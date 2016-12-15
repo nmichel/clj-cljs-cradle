@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" type="text/css" href="styles/style.css"></link>
+        <title>Title</title>
+    </head>
+
+    <body onload="cljxtest.core.init();">
+    </body>
+
+    <!-- These files must be loaded at the very end of the document to ensure figwheel can hook in the DOM -->
+    <!-- First load google tools for figwheel in interactive mode -->
+    <script src="scripts/build/dev/goog/base.js" type="text/javascript"></script>
+    <!-- Then load the project specific code -->
+    <script src="scripts/cljxtest.js" type="text/javascript"></script>
+    <!-- And finally call init function -->
+    <script type="text/javascript">goog.require("cljxtest.core");</script>
+</html>
