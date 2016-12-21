@@ -1,30 +1,7 @@
-.view {
-    background-color: #00BBFF;
-    display: inline-block;
-    padding-bottom: 10px;
+.title {
+    background-color: #00AAFF;
 }
 
-.header {
-    background-color: #00BBAA;
-    margin-bottom: 10px;
-    padding: 5px;
-    text-transform: capitalize;
-    vertical-align: top;
-}
-
-.inputs {
-    display: inline-block;
-}
-
-.input {
-    display: inline-block;
-    padding-left: 50px;
-    width: 50px;
-}
-
-input {
-    width: 80px;
-}
 .line {
+    background-color: #00AA22;
 }
-

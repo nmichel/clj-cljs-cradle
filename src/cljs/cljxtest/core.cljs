@@ -1,54 +1,46 @@
 (ns cljxtest.core
-  (:require [cljs.core :refer [enable-console-print!]]
-            [reagent.core :as r]))
+  (:require [cljs.core :refer [enable-console-print!]]))
 
 (enable-console-print!)
 
-(defonce state (r/atom {:click 0
-                        :text "click"
-                        :range 5}))
-
-(defn- header []
-    [:div {:class "header"}
-     [:span
-      "Click count [" (get @state :click) "]"]
-
-     [:div {:class "inputs"}
-      [:div
-       [:div {:class "input"} "range "]
-       [:input {:type "text"
-                :value (get @state :range)
-                :on-change #(swap! state assoc :range (-> % .-target .-value))}]
-       ]
-
-      [:div
-       [:div {:class "input"} "text "]
-       [:input {:type "text"
-                :value (get @state :text)
-                :on-change #(swap! state assoc :text (-> % .-target .-value))}]
-       ]
-      ]
-])
-
-(defn- line [n]
- ^{:key (str "id-" n)} [:div {:class "line"} (get @state :text) " " n])
-
-(defn- lines []
- [:div
-  (let [c (get @state :click)
-        r (get @state :range)]
-   (for [v (range (max 0 (- c r)) c)]
-        [line v]))])
-
-(defn- view []
-  [:div
-   {:class "view"
-    :on-click (fn []
-               (let [v (get @state :click)]
-                (swap! state assoc-in [:click] (inc v))))}
-    [header]
-    [lines]])
+(defn- build-frame
+  [hook]
+  (let [frame (.createElement js/document "div")
+        title (.createElement js/document "div")]
+    (set! (.-innerHTML title) "CLICK ME")
+    (.add (.-classList title) "title")
+    (.appendChild frame title)
+    (.appendChild hook frame)
+    frame
+    ))
 
 (defn ^:export init
   []
-  (r/render-component [view] (.-body js/document)))
+  (let [body (.-body js/document)
+        root (build-frame body)]
+    (.addEventListener root "click" (fn [event]
+                                      (let [e (.createElement js/document "div")]
+                                        (set! (.-innerHTML e) "click")
+                                        (set! (.-classList e) "line")
+                                        (.appendChild root e))))))
+
+;; See :aliases in project.clj
+
+;; Running in figwheel
+;; 
+;; shell> lein cljs-fig
+;; Figwheel: Cutting some fruit, just a sec ...
+;; Figwheel: Validating the configuration found in project.clj
+;; ...
+;; Prompt will show when Figwheel connects to your application
+;; To quit, type: :cljs/quit
+;; cljs.user=>
+
+;; Building production bundle
+;; shell> lein cljs cljsbuild once client-prod
+;; Compiling ClojureScript...
+;; Compiling "resources/scripts/cljxtest-bundle.js" from ["src/cljs"]...
+;; Successfully compiled "resources/scripts/cljxtest-bundle.js" in 11.986 seconds.
+;; shell> 
+
+
